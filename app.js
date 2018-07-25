@@ -2,8 +2,11 @@
 // Variables
 const qwerty = document.getElementById('qwerty');
 const phrase = document.getElementById('phrase');
-let missed = 0;
 const startGame = document.querySelector('.btn__reset');
+const letter = document.querySelectorAll('.letter');
+const scoreBoardImgs = document.querySelectorAll('.tries img');
+
+let missed = 0;
 
 const phrases = [
   "The bees knees",
@@ -23,6 +26,9 @@ startGame.addEventListener('click', () => {
   const overlay = document.querySelector('#overlay');
   overlay.style.display = 'none';
 });
+
+
+// FUNCTIONS STORED IN VARIABLES
 
 // Function selects a random phrase from array
 const getRandomPhraseAsArray = (arr) => {
@@ -51,44 +57,57 @@ const addPhraseToDisplay = (arr) => {
   }
 }
 
-// get random phrase, store array of characters
+// RFunction = get random phrase, store array of characters in variable
 characters = getRandomPhraseAsArray(phrases);
 console.log(characters)
-// add characters to display
+// RFunction = add characters to display
 addPhraseToDisplay(characters);
 
-// let matched = null;
+// let letterFound = null;
 
 // check if selected letter matches a character in the phrase
 const checkLetter = (e) => {
+  const letter = document.querySelectorAll('.letter');   //  <--- WHY DOES THIS FUNCTION BREAK W/O "LETTER" INSIDE IT?
   const selected = e.target;
-  const letter = document.querySelectorAll('.letter');
-  // let matched = null;
+  // let letterFound = null;
   for (i=0; i<letter.length; i+=1) {
     if (selected.textContent === letter[i].textContent) {
       letter[i].classList.add('show');
       const match = letter[i].textContent;
-      let matched = true;
-      // console.log(matched);
+      let letterFound = true;
+      // console.log(letterFound);
     } else {
-      let matched = null;
+      let letterFound = null;
     }
   }
-  // console.log(matched);
-  return matched;
+  // console.log(letterFound);
+  // return letterFound;
 }
 
+const gameResult = () => {
+  const show = document.querySelectorAll('.show');
+  if (show.length === letter.length) {
+    //show winning screen
+  }
+}
+
+//RUN FUNCTIONS
+
+// Click handler for buttons on screen keyboard
 qwerty.addEventListener('click', (e) => {
       // disable chosen buttons
   if (e.target.tagName === 'BUTTON') {
     e.target.classList.add('chosen');
     e.target.setAttribute('disabled', 'true');
   }
-      // run checkLetter function
+      // RFunction to compare letters & buttons
   checkLetter(e);
-      // add to scoreBoard
+
+      // increase "missed" total & change heart color
+      let matched = null; // <--- just using this to continue testing code. Doesn't belong there.
   if (matched === null) {
-    const scoreBoard = document.querySelector('#scoreboard');
-    console.log(scoreBoard);
+    missed += 1;
+    i = missed;
+    scoreBoardImgs[i-1].setAttribute('src', 'images/lostHeart.png');
   }
 });
