@@ -57,32 +57,29 @@ const addPhraseToDisplay = (arr) => {
   }
 }
 
-// RFunction = get random phrase, store array of characters in variable
+// RunFunction = get random phrase, store array of characters in variable
 characters = getRandomPhraseAsArray(phrases);
 console.log(characters)
-// RFunction = add characters to display
+// RunFunction = add characters to display
 addPhraseToDisplay(characters);
 
-// let letterFound = null;
+let letterFound;
 
 // check if selected letter matches a character in the phrase
 const checkLetter = (e) => {
   const letter = document.querySelectorAll('.letter');   //  <--- WHY DOES THIS FUNCTION BREAK W/O "LETTER" INSIDE IT?
   const selected = e.target;
-  // let letterFound = null;
   for (i=0; i<letter.length; i+=1) {
     if (selected.textContent === letter[i].textContent) {
       letter[i].classList.add('show');
       const match = letter[i].textContent;
-      let letterFound = true;
-      // console.log(letterFound);
-    } else {
-      let letterFound = null;
+      letterFound = true;
     }
   }
-  // console.log(letterFound);
-  // return letterFound;
+  return null;
 }
+
+// const result = checkLetter(e);
 
 const gameResult = () => {
   const show = document.querySelectorAll('.show');
@@ -100,12 +97,13 @@ qwerty.addEventListener('click', (e) => {
     e.target.classList.add('chosen');
     e.target.setAttribute('disabled', 'true');
   }
-      // RFunction to compare letters & buttons
+      // RunFunction to compare letters & buttons
   checkLetter(e);
-
+  result = checkLetter(e);
+  console.log(result);
       // increase "missed" total & change heart color
-      let matched = null; // <--- just using this to continue testing code. Doesn't belong there.
-  if (matched === null) {
+      // let matched = null; // <--- just using this to continue testing code. Doesn't belong there.
+  if (result === null) {
     missed += 1;
     i = missed;
     scoreBoardImgs[i-1].setAttribute('src', 'images/lostHeart.png');
