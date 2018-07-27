@@ -1,10 +1,15 @@
 
 // Variables
 const qwerty = document.getElementById('qwerty');
+const keyboardBtn = document.querySelectorAll('.keyrow button');
 const phrase = document.getElementById('phrase');
-const startGame = document.querySelector('.btn__reset');
-const letter = document.querySelectorAll('.letter');
+const startBtn = document.querySelector('.btn__reset');
 const scoreBoardImgs = document.querySelectorAll('.tries img');
+const overlay = document.querySelector('#overlay');
+const title = document.querySelector('.title');
+const letter = document.querySelectorAll('.letter');
+const ul = phrase.querySelector('ul');
+const phraseLi = ul.querySelectorAll('li');
 
 let missed = 0;
 
@@ -22,8 +27,7 @@ const phrases = [
 ];
 
 // Start Game
-startGame.addEventListener('click', () => {
-  const overlay = document.querySelector('#overlay');
+startBtn.addEventListener('click', () => {
   overlay.style.display = 'none';
 });
 
@@ -38,8 +42,8 @@ const getRandomPhraseAsArray = (arr) => {
   const selection = arr[randomNumber];
   const selectionLower = selection.toLowerCase();
   // turn that phrase into array of individual characters
-  const characters = selectionLower.split("");
-  return characters;
+  const characterList = selectionLower.split("");
+  return characterList;
 }
 
 // adds characters of an array to the display, and adds classes
@@ -52,21 +56,20 @@ const addPhraseToDisplay = (arr) => {
     } else {
       li.className = 'space';
     }
-    const ul = document.querySelector('#phrase');
     ul.appendChild(li);
   }
 }
 
 // RunFunction = get random phrase, store array of characters in variable
-characters = getRandomPhraseAsArray(phrases);
+const characters = getRandomPhraseAsArray(phrases);
 console.log(characters)
 // RunFunction = add characters to display
 addPhraseToDisplay(characters);
 
-let letterFound;
 
 // check if selected letter matches a character in the phrase
 const checkLetter = (e) => {
+  let letterFound = null;
   const letter = document.querySelectorAll('.letter');   //  <--- WHY DOES THIS FUNCTION BREAK W/O "LETTER" INSIDE IT?
   const selected = e.target;
   for (i=0; i<letter.length; i+=1) {
@@ -76,15 +79,20 @@ const checkLetter = (e) => {
       letterFound = true;
     }
   }
-  return null;
+  return letterFound;
 }
 
-// const result = checkLetter(e);
 
-const gameResult = () => {
+// checks to see if guessed all letters correctly, show win image
+const checkWin = () => {
   const show = document.querySelectorAll('.show');
+  const letter = document.querySelectorAll('.letter');
   if (show.length === letter.length) {
-    //show winning screen
+    console.log('WAHOOO');
+    overlay.style.display = 'flex';
+    overlay.classList.add('win');
+    title.textContent = 'You win!'
+    startBtn.textContent = 'Play again';
   }
 }
 
@@ -99,13 +107,59 @@ qwerty.addEventListener('click', (e) => {
   }
       // RunFunction to compare letters & buttons
   checkLetter(e);
-  result = checkLetter(e);
-  console.log(result);
-      // increase "missed" total & change heart color
-      // let matched = null; // <--- just using this to continue testing code. Doesn't belong there.
-  if (result === null) {
-    missed += 1;
+  matched = checkLetter(e);
+      // change heart color & increase "missed" total
+  if (matched === null) {
     i = missed;
-    scoreBoardImgs[i-1].setAttribute('src', 'images/lostHeart.png');
+    scoreBoardImgs[i].setAttribute('src', 'images/lostHeart.png');
+    missed += 1;
+  }
+
+  if (missed === 5) {
+    console.log('I SAD');
+    overlay.style.display = 'flex';
+    overlay.classList.add('lose');
+    title.textContent = 'Nope, sorry.'
+    startBtn.textContent = 'Play again';
+  }
+
+  checkWin();
+});
+
+
+startBtn.addEventListener('click', (e) => {
+  if (e.target.textContent === 'Play again') {
+    overlay.style.display = 'none';
+
+    // score back to zero
+    missed = 0
+    console.log (missed);
+
+    // reset hearts
+    for (i=0; i<scoreBoardImgs.length; i+=1) {
+      scoreBoardImgs[i].setAttribute('src', 'images/liveHeart.png');
+    }
+
+    // remove list items
+    const li = phrase.querySelectorAll('li');
+    for (i=0; i<li.length; i+=1) {
+      ul.removeChild(li[i]);
+    }
+
+    // remove class and attribute from keyboard buttons
+    for (i=0; i<keyboardBtn.length; i+=1) {
+      keyboardBtn[i].classList.remove('chosen');
+      keyboardBtn[i].disabled = false;
+    }
+
+    // remove classes from overlay
+    overlay.classList.remove('win', 'lose');
+
+    //generate new random phrase
+    const characters = getRandomPhraseAsArray(phrases);
+    console.log(characters)
+
+    // Add characters to display
+    addPhraseToDisplay(characters);
   }
 });

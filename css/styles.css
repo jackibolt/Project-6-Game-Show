@@ -94,6 +94,7 @@ button {
   color: transparent;
   background: var(--color-neutral-light);
   border-radius: 5px;
+  transition: 1.5s;
 }
 
 .space {
@@ -156,6 +157,7 @@ button {
 
 .win {
   background-color: var(--color-win);
+  font-size: 5em;
 }
 
 .win a {
@@ -164,6 +166,7 @@ button {
 
 .lose {
   background-color: var(--color-lose);
+  font-size: 3em;
 }
 
 .lose a {
