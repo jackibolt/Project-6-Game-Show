@@ -109,7 +109,7 @@ qwerty.addEventListener('click', (e) => {
   checkLetter(e);
   matched = checkLetter(e);
       // change heart color & increase "missed" total
-  if (matched === null) {
+  if (e.target.tagName === 'BUTTON' && matched === null) {
     i = missed;
     scoreBoardImgs[i].setAttribute('src', 'images/lostHeart.png');
     missed += 1;
